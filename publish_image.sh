@@ -1,5 +1,27 @@
 #!/bin/bash
 
+################################################################################
+## Standard logging - start
+################################################################################
+APP=publish_image.sh
+TIMESTAMP=`date +%Y-%m-%d_%H%M%S`
+#TODO: extract or make LOG_DIR path relative
+LOG_DIR=/Users/lblackb/VMImages/virtual-box-management/log
+mkdir -p ${LOG_DIR}
+LOG=${LOG_DIR}/${APP}_${TIMESTAMP}.log
+
+echo "LOG=[${LOG}]"
+{
+HOST=`hostname`
+USER=`id -un`
+LOG_ID="${USER}@${HOST}:$$:${PWD}:$0"
+
+echo "LOG=[${LOG}]"
+echo "LOG_ID=[$LOG_ID}]"
+################################################################################
+## Standard logging - end
+################################################################################
+
 #for the ubuntu systems
 PUB_USER=workstation
 VMIMAGES_DIR=/home/${PUB_USER}/VMImages/images/dist
@@ -47,3 +69,7 @@ for SERVER in ${SERVERS} ; do
     echo "~8 start vm"
     ssh ${REMOTE} "vboxmanage startvm \"${VMNAME}\""
 done
+################################################################################
+## Standard logging - finish
+################################################################################
+} >> ${LOG} 2>&1
