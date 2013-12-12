@@ -18,6 +18,8 @@ LOG_ID="${USER}@${HOST}:$$:${PWD}:$0"
 
 echo "LOG=[${LOG}]"
 echo "LOG_ID=[$LOG_ID}]"
+START=`date`
+echo "${START} - start"
 ################################################################################
 ## Standard logging - end
 ################################################################################
@@ -51,25 +53,30 @@ for SERVER in ${SERVERS} ; do
     echo "~3 mkdir ${VMIMAGES_DIR}"
     ssh ${REMOTE} "mkdir -p ${VMIMAGES_DIR}"
     echo "~4 copy image"
-#    scp $IMAGE ${REMOTE}:${VMIMAGES_DIR}
+    scp $IMAGE ${REMOTE}:${VMIMAGES_DIR}
     echo "~5 list image"
     ssh ${REMOTE} "ls -lh ${VMIMAGES_DIR}/${IMAGENAME}"
     echo "~6a ungegister vm - shutdown"
     ssh ${REMOTE} "vboxmanage controlvm \"${VMNAME}\" acpipowerbutton"
 ## ugly hack to sleep some period before shutdown completes.  need to figure out a way to poll if the vm is shutdown.
     echo "~6b ungegister vm - pause for shutdown"
-    sleep 10
+    ## slow machine (lab4) takes about  30s 
+    ## fast machine (imagemaster) about  5s
+    sleep 40
     echo "~6c ungegister vm"
     ssh ${REMOTE} "vboxmanage unregistervm --delete \"${VMNAME}\""
     echo "~7 import vm"
     ssh ${REMOTE} "vboxmanage import ${VMIMAGES_DIR}/${IMAGENAME}"
-#    ssh ${PUB_USER}@${SERVER} "vboxmanage import --dry-run ${VMIMAGES_DIR}/${IMAGENAME}"
-#    vboxmanage import --dry-run /home/workstation/VMImages/vmout_2013-35-06_223552.ova
-
+####    ssh ${PUB_USER}@${SERVER} "vboxmanage import --dry-run ${VMIMAGES_DIR}/${IMAGENAME}"
     echo "~8 start vm"
+    ## slow machine (lab4) takes about  2m30s 
+    ## fast machine (imagemaster) about   30s
     ssh ${REMOTE} "vboxmanage startvm \"${VMNAME}\""
 done
 ################################################################################
 ## Standard logging - finish
 ################################################################################
+END=`date`
+echo "${START} - start"
+echo "${END} - end"
 } >> ${LOG} 2>&1
