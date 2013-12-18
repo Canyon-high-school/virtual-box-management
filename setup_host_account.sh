@@ -76,8 +76,8 @@ function create_remote_user {
     RUSER=$3
 
     REMOTE=${RADMIN}@${RHOST}
-    #TODO: start here.  sudo usage needs work
-    ssh ${REMOTE} "sudo useradd -m ${REMOTE_USER}"
+    #TODO: start here.  sudo usage needs work.  need to consider pushing one script to run under sudo.
+    ssh -t ${REMOTE} "sudo useradd -m ${REMOTE_USER}"
 }
 
 echo "~1 Create tmp dir"

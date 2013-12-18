@@ -15,3 +15,14 @@ real	9m49.675s
 user	0m0.205s
 sys	0m0.065s
 
+
+================================================================================
+find users with passwords or passwords not required.
+the grep patterns below are for accounts that are locked.
+----
+sudo cat /etc/shadow | grep -v -e "^[a-z-]*:\*" -e "^[a-z-]*:\!"
+----
+From Wikipedia: http://en.wikipedia.org/wiki/Passwd
+"!" - the account is password Locked, user will be unable to log-in via password authentication but other methods (e.g. ssh key) may be still allowed)[7]
+"*LK*" or "*" - the account is Locked, user will be unable to log-in via password authentication but other methods (e.g. ssh key) may be still allowed) [7]
+================================================================================
