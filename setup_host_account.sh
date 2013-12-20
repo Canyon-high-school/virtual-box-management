@@ -57,13 +57,13 @@ function install_authorized_key {
 	REMOTE=${RUSER}@${RHOST}
 	RUSER_SSH_DIR=/home/${RUSER}/.ssh
 	ssh ${REMOTE} "mkdir -p ${RUSER_SSH_DIR}"
+	echo "fix permission on .ssh dir"
+	ssh ${REMOTE} "chmod 700 ${RUSER_SSH_DIR}"
+
 	scp ${TMP_AUTH_KEYS} ${REMOTE}:${RUSER_SSH_DIR}
 
 	echo "test key connect"
 	ssh ${REMOTE} hostname
-
-	echo "fix permission on .ssh dir"
-	ssh ${REMOTE} "chmod 700 ${RUSER_SSH_DIR}"
 
     else
 	echo "No public key found.  Each connection will need to be authenticated with a password."
@@ -76,8 +76,22 @@ function create_remote_user {
     RUSER=$3
 
     REMOTE=${RADMIN}@${RHOST}
-    #TODO: start here.  sudo usage needs work.  need to consider pushing one script to run under sudo.
-    ssh -t ${REMOTE} "sudo useradd -m ${REMOTE_USER}"
+    #TODO: start here.  sudo usage needs work.  need to consider pushing one script to run under sudo.;  need to figure out how to send multipe commands through sudo.
+#    ssh -t ${REMOTE} "sudo /usr/sbin/useradd -m ${REMOTE_USER}"
+    
+    RADMIN_AUTH_KEYS=/home/${RADMIN}/.ssh/authorized_keys
+    RUSER_SSH_DIR=/home/${RUSER}/.ssh
+    RUSER_AUTH_KEYS=${RUSER_SSH_DIR}/authorized_keys
+
+    COMMAND=""
+    COMMAND="$COMMAND /usr/sbin/useradd -m ${REMOTE_USER} ; "
+    COMMAND="$COMMAND mkdir -p ${RUSER_SSH_DIR} ; "
+    COMMAND="$COMMAND cp ${RADMIN_AUTH_KEYS} ${RUSER_AUTH_KEYS} ; "
+    COMMAND="$COMMAND chown -Rh $RUSER:$RUSER ${RUSER_SSH_DIR} ; "
+    COMMAND="$COMMAND chmod 700 ${RUSER_SSH_DIR} ; "
+    COMMAND="$COMMAND ls -la ${RUSER_SSH_DIR} ; "
+
+    ssh -t ${REMOTE} "sudo sh -c '$COMMAND'"
 }
 
 echo "~1 Create tmp dir"
@@ -88,8 +102,8 @@ install_authorized_key ${REMOTE_ADMIN_USER} ${REMOTE_HOST}
 echo "~3 create user ${REMOTE_USER} on ${REMOTE_HOST}"
 create_remote_user ${REMOTE_ADMIN_USER} ${REMOTE_HOST} ${REMOTE_USER}
 
-echo "List tmp dir: ${TMP_DIR}"
-ls -la ${TMP_DIR}
+#echo "List tmp dir: ${TMP_DIR}"
+#ls -la ${TMP_DIR}
 echo "Remove tmp dir"
 rm -r ${TMP_DIR}
 
