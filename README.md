@@ -62,23 +62,25 @@ Running remote commands on windows 7 vm
 http://www.virtualbox.org/manual/ch08.html#vboxmanage-guestcontrol
 
 Check your licensing status:
-vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox_WBAH" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
+vboxmanage --nologo guestcontrol "GoldImage" execute --username LocalAdmin --password blackburn --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
+vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
 vboxmanage --nologo guestcontrol "<vm image name>" execute --username IEUser --password <password> --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
 
 To release the product key for use elsewhere, use: (Does not seem to be a way to elevate to admin privileges)
-vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox_WBAH" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-upk'
+vboxmanage --nologo guestcontrol "GoldImage" execute --username LocalAdmin --password blackburn --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/upk'
+vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-upk'
 
 Update Product key through command line: (Does not seem to be a way to elevate to admin privileges)
-vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox_WBAH" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-ipk' '74M4B-BTT8P-MMM3M-64RRJ-JCDDG'
+vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-ipk' '74M4B-BTT8P-MMM3M-64RRJ-JCDDG'
 
 Run IE
-VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox_WBAH" execute --image "C:\\Program Files\\Internet Explorer\\iexplore.exe" --username IEUser  --wait-exit --password Passw0rd\!
+VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --image "C:\\Program Files\\Internet Explorer\\iexplore.exe" --username IEUser  --wait-exit --password Passw0rd\!
 
 Get IP information
-VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox_WBAH" execute --image "c:\\windows\\system32\\ipconfig.exe" --username IEUser  --wait-exit --wait-stdout --password Passw0rd\!
+VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --image "c:\\windows\\system32\\ipconfig.exe" --username IEUser  --wait-exit --wait-stdout --password Passw0rd\!
 
 Start a command prompt.. does not seem to really work
-VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox_WBAH" execute --image "c:\\windows\\system32\\cmd.exe" --username IEUser  --wait-exit --wait-stdout --password Passw0rd\!
+VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --image "c:\\windows\\system32\\cmd.exe" --username IEUser  --wait-exit --wait-stdout --password Passw0rd\!
 
 
 ================================================================================
@@ -90,6 +92,16 @@ Execute Windows applications remotely using SSH and PSExec
 http://nonvox.blogspot.com/2011/02/execute-windows-applications-remotely.html
 So we are back to cygwin for remote execution!
 Seems like too much to update license keys.
+
+================================================================================
+
+
+================================================================================
+Renaming Windows 7 from command line.
+http://www.windows-commandline.com/change-computer-name-command-line/
+
+WMIC computersystem where caption='currentname' rename newname
+WMIC computersystem where caption='GoldImage' rename Workstation
 
 ================================================================================
 
