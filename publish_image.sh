@@ -1,12 +1,27 @@
 #!/bin/bash
+################################################################################
+## This script will publish a virtual box image to a set of servers
+## and takes two input parameters.
+##
+## publish_image.sh <IMAGE> <VMNAME>
+##
+## IMAGE = full path to virtual box export file.
+## VMNAME = VM name to replace on target system with exported image file.
+##
+## For now the list of servers is hard coded in the SERVERS variable.
+## TODO: externalize SERVERS list
+## TODO: update LOG_DIR to be configurable or based on script location.
+################################################################################
+IMAGE=$1
+VMNAME=$2
 
 ################################################################################
 ## Standard logging - start
 ################################################################################
 APP=publish_image.sh
 TIMESTAMP=`date +%Y-%m-%d_%H%M%S`
-#TODO: extract or make LOG_DIR path relative
-LOG_DIR=/Users/lblackb/VMImages/virtual-box-management/log
+## TODO: update LOG_DIR to be configurable or based on script location.
+LOG_DIR=${PWD}/log
 mkdir -p ${LOG_DIR}
 LOG=${LOG_DIR}/${APP}_${TIMESTAMP}.log
 
@@ -29,22 +44,12 @@ PUB_USER=workstation
 VMIMAGES_DIR=/home/${PUB_USER}/VMImages/images/dist
 SERVERS="\
 imagemaster.local \
-lab4.local \
 "
+#lab4.local \
 
-#for the mac
-#PUB_USER=lblackb
-#VMIMAGES_DIR=/Users/${PUB_USER}/VMImages
-#SERVERS="\
-#192.168.42.109 \
-#"
-
-IMAGE=$1
 IMAGENAME=`basename ${IMAGE}`
-VMNAME="IE10.Win7.For.MacVirtualBox_WBAH"
 echo "Publish image: [${IMAGENAME}] [${IMAGE}]"
 ls -lh ${IMAGE}
-
 
 for SERVER in ${SERVERS} ; do
     echo "~1"

@@ -1,14 +1,34 @@
 virtual-box-management
 ======================
+Scripting to manage exporting, importing, and distributing VM images
+to multiple systems from central master with golden vm image.
 
-Scripting to manage exporting, importing, and distributing VM images to multiple systems from central master with golden vm image.
+If you are looking for Windows VMs to test this out with, some decent
+images are available at http://modern.ie/.
 
 ================================================================================
-If you are looking for Windows VMs to test this out with, some decent images are available at http://modern.ie/.
+TODO:
+================================================================================
+1. create script to capturing base system information in a screenshot.
+   (see: doc/ScreenShot_systeminfo_1.png)
+   open command prompt
+   maximize command promp or open to standardized size and possition
+   run: systeminfo | findstr /B /C:"Host Name" /C:"OS"
+   run: slmgr.vbs -dlv
+   capture screenshot
+
+2. create guestcontrol helper script based on examples from "Running
+   remote commands on windows 7 vm" below.
+================================================================================
+
 
 ================================================================================
 some notes
-as of Mon Dec  9 08:33:29 EST 2013 two workstations (one really slow) took about 10 minutes to publish) clean start and stop on the faster workstation.
+================================================================================
+As of Mon Dec 9 08:33:29 EST 2013 two workstations (one really slow)
+took about 10 minutes to publish) clean start and stop on the faster
+workstation.
+
 time ./publish_image.sh ../vmout_2013-35-06_223552.ova
 
 real	9m49.675s
@@ -55,32 +75,30 @@ run with administrator privileges
 (see: doc/ScreenShot_slmgr.vbs_6.png)
 licensing status after release
 (see: doc/ScreenShot_slmgr.vbs_7.png)
-
+================================================================================
 
 ================================================================================
 Running remote commands on windows 7 vm
 http://www.virtualbox.org/manual/ch08.html#vboxmanage-guestcontrol
 
 Check your licensing status:
-vboxmanage --nologo guestcontrol "GoldImage" execute --username LocalAdmin --password blackburn --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
-vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
-vboxmanage --nologo guestcontrol "<vm image name>" execute --username IEUser --password <password> --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
+vboxmanage --nologo guestcontrol "<vm image name>" execute --username <username> --password <password> --wait-exit --wait-stdout --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
+vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/dlv'
 
-To release the product key for use elsewhere, use: (Does not seem to be a way to elevate to admin privileges)
-vboxmanage --nologo guestcontrol "GoldImage" execute --username LocalAdmin --password blackburn --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '/upk'
-vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-upk'
+To release the product key for use elsewhere, use: (Does not seem to be a way to elevate to admin privileges to make this work.)
+vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-upk'
 
-Update Product key through command line: (Does not seem to be a way to elevate to admin privileges)
-vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout  --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-ipk' '74M4B-BTT8P-MMM3M-64RRJ-JCDDG'
+Update Product key through command line: (Does not seem to be a way to elevate to admin privileges to make this work.)
+vboxmanage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout --image 'c:\Windows\System32\wscript.exe' 'c:\\windows\\System32\\slmgr.vbs' '-ipk' '74M4B-BTT8P-MMM3M-64RRJ-JCDDG'
 
 Run IE
-VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --image "C:\\Program Files\\Internet Explorer\\iexplore.exe" --username IEUser  --wait-exit --password Passw0rd\!
+VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout --image "C:\\Program Files\\Internet Explorer\\iexplore.exe"
 
 Get IP information
-VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --image "c:\\windows\\system32\\ipconfig.exe" --username IEUser  --wait-exit --wait-stdout --password Passw0rd\!
+VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout --image "c:\\windows\\system32\\ipconfig.exe"
 
 Start a command prompt.. does not seem to really work
-VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --image "c:\\windows\\system32\\cmd.exe" --username IEUser  --wait-exit --wait-stdout --password Passw0rd\!
+VBoxManage --nologo guestcontrol "IE10.Win7.For.MacVirtualBox" execute --username IEUser --password Passw0rd\! --wait-exit --wait-stdout --image "c:\\windows\\system32\\cmd.exe"
 
 
 ================================================================================
@@ -99,10 +117,19 @@ Seems like too much to update license keys.
 ================================================================================
 Renaming Windows 7 from command line.
 http://www.windows-commandline.com/change-computer-name-command-line/
+Reboot is require to make new name take effect.
 
 WMIC computersystem where caption='currentname' rename newname
+WMIC computersystem where caption='newname' rename 'GoldImage'
 WMIC computersystem where caption='GoldImage' rename Workstation
+================================================================================
 
+================================================================================
+Find windows OS version from command line
+http://www.windows-commandline.com/find-windows-os-version-from-command/
+
+systeminfo | findstr /C:"OS"
+systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
 ================================================================================
 
 ================================================================================
