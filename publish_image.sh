@@ -5,15 +5,48 @@
 ##
 ## publish_image.sh <IMAGE> <VMNAME>
 ##
-## IMAGE = full path to virtual box export file.
+## IMAGE  = full path to virtual box export file.
 ## VMNAME = VM name to replace on target system with exported image file.
 ##
 ## For now the list of servers is hard coded in the SERVERS variable.
 ## TODO: externalize SERVERS list
 ## TODO: update LOG_DIR to be configurable or based on script location.
 ################################################################################
+function usage {
+    MESSAGE=$1
+    echo "$MESSAGE"
+    echo "publish_image.sh <IMAGE> <VMNAME> '<SERVERS>'"
+    echo ""
+    echo "IMAGE   = full path to virtual box export file."
+    echo "VMNAME  = VM name to replace on target system with exported image file."
+    echo "SERVERS = space delimited list of server names.  yes you need the quote and yes there are probably better ways."
+}
+
 IMAGE=$1
+echo "IMAGE=[$IMAGE]"
+if [[ -z "$IMAGE" ]] ; then
+    usage "missing IMAGE"
+    exit;
+fi
+
 VMNAME=$2
+echo "VMNAME=[$VMNAME]"
+if [[ -z "$VMNAME" ]] ; then
+    usage "missing VMNAME"
+    exit;
+fi
+
+SERVERS=$3
+echo "SERVERS=[$SERVERS]"
+if [[ -z "$SERVERS" ]] ; then
+    usage "missing SERVERS"
+    exit;
+fi
+
+#SERVERS="\
+#imagemaster.local \
+#"
+##lab4.local \
 
 ################################################################################
 ## Standard logging - start
@@ -42,10 +75,6 @@ echo "${START} - start"
 #for the ubuntu systems
 PUB_USER=workstation
 VMIMAGES_DIR=/home/${PUB_USER}/VMImages/images/dist
-SERVERS="\
-imagemaster.local \
-"
-#lab4.local \
 
 IMAGENAME=`basename ${IMAGE}`
 echo "Publish image: [${IMAGENAME}] [${IMAGE}]"
