@@ -1,4 +1,47 @@
 #!/bin/bash
+################################################################################
+## This script sets up the host account on a system to run running
+## VMs.  this has been developed for Ubuntu running VirtualBox.  I do
+## not think there is anything specific to Ubuntu or VirtualBox in the
+## script.
+##
+## openssh needs to be setup on host box to support publishing
+## https://help.ubuntu.com/10.04/serverguide/openssh-server.html
+##
+## TODO: setup password and autologin for host account.
+## TODO: enable standard logging.  currently commented out.
+## 
+################################################################################
+function usage {
+    MESSAGE=$1
+    echo "$MESSAGE"
+    echo "setup_host_account.sh <REMOTE_HOST> <REMOTE_ADMIN_USER> <REMOTE_USER>"
+    echo ""
+    echo "REMOTE_HOST       = host name of vm server"
+    echo "REMOTE_ADMIN_USER = admin user on vm server"
+    echo "REMOTE_USER       = host account running VMs on VM server"
+}
+
+REMOTE_HOST=$1
+echo "REMOTE_HOST=[$REMOTE_HOST]"
+if [[ -z "$REMOTE_HOST" ]] ; then
+    usage "missing REMOTE_HOST"
+    exit;
+fi
+
+REMOTE_ADMIN_USER=$2
+echo "REMOTE_ADMIN_USER=[$REMOTE_ADMIN_USER]"
+if [[ -z "$REMOTE_ADMIN_USER" ]] ; then
+    usage "missing REMOTE_ADMIN_USER"
+    exit;
+fi
+
+REMOTE_USER=$3
+echo "REMOTE_USER=[$REMOTE_USER]"
+if [[ -z "$REMOTE_USER" ]] ; then
+    usage "missing REMOTE_USER"
+    exit;
+fi
 
 ################################################################################
 ## Standard logging - start
@@ -24,15 +67,6 @@ echo "${START} - start"
 ################################################################################
 ## Standard logging - end
 ################################################################################
-
-REMOTE_HOST=$1
-REMOTE_ADMIN_USER=$2
-REMOTE_USER=$3
-
-REMOTE_HOST=lab4.local
-REMOTE_ADMIN_USER=blackburn
-REMOTE_USER=workstation
-
 TMP_DIR=/tmp/${USER}.$$
 
 PUBLIC_KEY=$HOME/.ssh/id_rsa.pub
