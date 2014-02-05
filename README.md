@@ -46,6 +46,9 @@ From Wikipedia: http://en.wikipedia.org/wiki/Passwd
 "*LK*" or "*" - the account is Locked, user will be unable to log-in via password authentication but other methods (e.g. ssh key) may be still allowed) [7]
 ================================================================================
 
+# openssh needs to be setup on host box to support publishing
+# https://help.ubuntu.com/10.04/serverguide/openssh-server.html
+
 ================================================================================
 Republishing Windows VMs from a master image
 http://answers.microsoft.com/en-us/windows/forum/windows_7-windows_install/republishing-windows-vms-from-a-master-image/1e84edcf-3e0a-4716-96be-d134d8b95370
@@ -76,7 +79,9 @@ run with administrator privileges
 licensing status after release
 (see: doc/ScreenShot_slmgr.vbs_7.png)
 ================================================================================
+Running remote commands with psexec
 
+c:\software\PSTools\psexec -h c:\Windows\System32\wscript.exe c:\\windows\\System32\\slmgr.vbs /upk
 ================================================================================
 Running remote commands on windows 7 vm
 http://www.virtualbox.org/manual/ch08.html#vboxmanage-guestcontrol
@@ -122,6 +127,7 @@ Reboot is require to make new name take effect.
 WMIC computersystem where caption='currentname' rename newname
 WMIC computersystem where caption='newname' rename 'GoldImage'
 WMIC computersystem where caption='GoldImage' rename Workstation
+WMIC computersystem where caption='GoldImage' rename TestImage
 ================================================================================
 
 ================================================================================
@@ -195,3 +201,36 @@ https://forums.virtualbox.org/viewtopic.php?f=2&t=56253
 
 Execute Windows applications remotely using SSH and PSExec
 http://nonvox.blogspot.com/2011/02/execute-windows-applications-remotely.html
+
+
+================================================================================
+Getting VirtualBox up and running on Chromebook with Crouton.
+http://www.howtogeek.com/162120/how-to-install-ubuntu-linux-on-your-chromebook-with-crouton/
+https://github.com/dnschneid/crouton/blob/master/README.md
+
+Using and Acer C710-2487 with 4GB of RAM and 4GB Memory 320GB HDD.  ~20GB of the HDD seem to be missing or reserved for something that is not visable using df on the shell.
+
+I used Crouton to install Ubuntu’s Unity desktop.  This seems to setup a very bare bones ubuntu install of 12.04 TLS code name precise on an intel chromebook.  Only the Xterm is available and not the terminal app.  The Ubuntu Software Center needs to be added via apt-get.  Screenshots do not seem to work.
+
+Crouton gets Ubuntu up and running ok after a little hick up.  Looks like the inital copy into /var/run/crouton had some issue and had to delete the directory tree and start over.  There seem to be some leftover files in /tmp/crouton.* from the failed attempts.  The crouton installer does build a temporary directory in /tmp named crouton.<random> to preform the download and install. 
+
+Installing VirtualBox.
+This was not a straghtforward install as with a standard Ubuntu 12.04 TLS system.
+Pulled down the 1386 virtualbox package from https://www.virtualbox.org/wiki/Linux_Downloads
+http://download.virtualbox.org/virtualbox/4.3.6/virtualbox-4.3_4.3.6-91406~Ubuntu~precise_i386.deb
+attempt to install virtualbox using
+sudo dpkg -i irtualbox-4.3_4.3.6-91406~Ubuntu~precise_i386.deb
+
+had to run the fix flag for apt-get
+sudo apt-get -f install
+
+This fixed a lot of broken dependancies and allowed emacs to be installed.
+
+rerunning virtualbox package install produced less errors.
+sudo dpkg -i irtualbox-4.3_4.3.6-91406~Ubuntu~precise_i386.deb
+now there are dependancy problems with only libdevmapper1.02.1, libpython2.7, and psmisc
+
+running again to try to correct
+sudo apt-get -f install
+
+VirtualBox still seems to have issue running on the ChromeBook under Crouton.  I went with plan B and using Chrome Remote Desktop to connect to VMs running on a remote server.
