@@ -2,16 +2,17 @@
 ################################################################################
 ## This script will export a virtual box image to a standard dated
 ## file and log the output.
+## https://www.virtualbox.org/manual/ch08.html#vboxmanage-export
 ##
-## export_golden.sh
+## export_golden.sh <VMNAME>
 ##
-## OUTDIR  = director to export VM file
 ## VMNAME  = VM name to export
+## OUTDIR  = directory to export VM file
 ## OUTFILE = Generated from VM name and date time.
 ##
-## TODO: allow override of VMNAME and OUTDIR from command line arguments
+## TODO: allow override of OUTDIR from command line arguments
 ## TODO: update LOG_DIR to be configurable or based on script location.
-##
+## TODO: more error checking
 ##
 ## LOG=`./export_golden.sh | grep -e "^LOG=" | sed "s/^LOG=\[\(.*\)\]/\1/"` ; 
 ## echo $LOG ;
@@ -22,8 +23,23 @@
 ## oneliner
 ## date ; LOG=`./export_golden.sh | grep -e "^LOG=" | sed "s/^LOG=\[\(.*\)\]/\1/"` ; echo $LOG ; FILE=`cat $LOG | grep "export image:" | sed "s/^.* to file //"` ; echo $FILE ; ./publish_image.sh $FILE "GoldImage" ; date
 ################################################################################
+function usage {
+    MESSAGE=$1
+    echo "$MESSAGE"
+    echo "export_golden.sh <VMNAME>"
+    echo ""
+    echo "VMNAME  = VM name to export"
+}
+
 OUTDIR=dist
-VMNAME="GoldImage"
+#VMNAME="GoldImage"
+VMNAME=$1
+
+echo "VMNAME=[$VMNAME]"
+if [[ -z "$VMNAME" ]] ; then
+    usage "missing VMNAME"
+    exit;
+fi
 
 ################################################################################
 ## Standard logging - start
@@ -53,11 +69,12 @@ echo "${START} - start"
 ## Standard logging - end
 ################################################################################
 
-DATETIME=`date +%Y-%M-%d_%H%M%S`
+DATETIME=`date +%Y-%m-%d_%H%M%S`
 OUTFILE=${VMNAME}_${DATETIME}.ova
 OUT=${OUTDIR}/${OUTFILE}
 
-# https://www.virtualbox.org/manual/ch08.html#vboxmanage-export
+echo "Exporting ${VMNAME} to ${OUT}"
+
 echo "list VMs"
 vboxmanage list vms
 
